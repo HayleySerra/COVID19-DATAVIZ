@@ -10,13 +10,13 @@
     <h1 style="font-family:poppins"> COVID-19 Data </h1>
     <button id="northAmerica" type="button">Toggle North America</button>
     <button id="southAmerica" type="button">Toggle South America</button>
-    <button id="thisWeek" type="button">Cases current week</button>
+    <button id="thisWeek" type="button">Cases this week</button> 
     <button id="lastWeek" type="button">Cases last week</button>
     <button id="weekChange" type="button">Weekly % Change</button>
     <button id="maxCases" type="button">Top 5 Countries with Highest Cases</button>
 </head>
 
-<body style="background-color:rgba(184, 184, 187, 0.979);">
+<body style="background-color:rgba(235, 229, 229, 0.979);">
     <script>
         let width = 1000;
         let height = 1000;
@@ -26,7 +26,6 @@
             .attr("width", width)
             .attr("height", height);
 
-        //reference: https://www.geeksforgeeks.org/d3-js-geomercator-function/
         let map = d3
             .geoMercator()
             .scale(width / 2.5 / Math.PI)
@@ -45,47 +44,56 @@
             .range(["#808080", "#808080", "#808080", "#808080", "#808080", "#808080", "#808080"]);
 
         var colorScale = d3.scaleQuantize() 
-            .range(["#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b"]);
+            .range(["#86CEFA", "#73B9EE", "#5494DA", "#3373C4", "#1750AC", "#003396"]);
 
         var percentScale = d3.scaleOrdinal() 
-            .range(["#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b"]);
+            .range(["#86CEFA", "#73B9EE", "#5494DA", "#3373C4", "#1750AC", "#003396"]);
 
-            //FIXING THIS SCALE
-        var maxPerPopScale =
-            d3.scaleOrdinal() 
-            .range(["#eeeee4"]);
+        var maxScale = d3.scaleOrdinal() 
+            .range(["#EBE5E5", "#003396"]);
 
 
-        var dataSet = "covid_weekly_trend_combined.csv"
-
-        //scale for map
+        // colour gradient scale for map
         var defs = svg.append('defs');
         var linearGradient = defs.append("linearGradient")
             .attr("id", "linear-gradient");
 
         linearGradient.append("stop")
             .attr("offset", "0%")
-            .attr("stop-color", "#e0ecf4");
+            .attr("stop-color", "#86CEFA");
 
         linearGradient.append("stop")
             .attr("offset", "25%")
-            .attr("stop-color", "#bfd3e6")
+            .attr("stop-color", "#73B9EE")
 
         linearGradient.append("stop")
             .attr("offset", "75%")
-            .attr("stop-color", "#88419d")
+            .attr("stop-color", "#5494DA")
 
         linearGradient.append("stop")
             .attr("offset", "100%")
-            .attr("stop-color", "#6e016b")
+            .attr("stop-color", "#3373C4")
+
+        linearGradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", "#1750AC")
+
+        linearGradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", "#003396")
 
         svg.append('rect')
-            .attr('x', 40)
-            .attr('y', 170)
+            .attr('x', 20)
+            .attr('y', 130)
             .attr('width', 190)
-            .attr('height', 25)
-            .attr("stroke", "white")
+            .attr('height', 20)
+            .attr("stroke", "black")
+            .attr("stroke-width", "0.01px")
             .style("fill", "url(#linear-gradient)");
+    
+
+        //dataset
+        var dataSet = "covid_weekly_trend_combined.csv";
 
         //access the data
         d3.queue()
@@ -112,14 +120,6 @@
                     .projection(map));
 
 
-            svg.append('text')
-                .attr('x', 20)
-                .attr('y', 50)
-                .attr("stroke", "black")
-                .style("font-size", "15px")
-                .text("PLEASE MAKE A BUTTON SELECTION TO VIEW DATA");
-
-
             update();
 
             d3.selectAll("button").on("click", update);
@@ -134,38 +134,41 @@
                     dt = thisWeek;
                     mp = covidData.map(a => +a["Cases in the last 7 days"]);
                     scaleType = percentScale;
-                    min = d3.min(mp).toString();
-                    max = d3.max(mp).toString();
+                    min = d3.min(mp).toLocaleString();
+                    max = d3.max(mp).toLocaleString();
 
                     svg.selectAll("text").remove();
+                    svg.selectAll("rect").remove();
                     svg.append('text')
                         .attr("id", "title")
-                        .attr('x', 40)
-                        .attr('y', 165)
+                        .attr('x', 20)
+                        .attr('y', 120)
                         .attr("stroke", "black")
-                        .style("font-size", "12px")
+                        .style("font-size", "14px")
+                        .style("font-family", "poppins")
                         .text(changeLabel);
 
                     svg.append('text')
-                        .attr('x', 40)
-                        .attr('y', 210)
+                        .attr('x', 15)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(min);
 
                     svg.append('text')
-                        .attr('x', 195)
-                        .attr('y', 210)
+                        .attr('x', 200)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(max);
 
                     svg.append('rect')
-                        .attr('x', 40)
-                        .attr('y', 170)
+                        .attr('x', 20)
+                        .attr('y', 130)
                         .attr('width', 190)
-                        .attr('height', 25)
-                        .attr("stroke", "white")
+                        .attr('height', 20)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "0.01px")
                         .style("fill", "url(#linear-gradient)");
 
 
@@ -173,98 +176,116 @@
                     dt = lastWeek;
                     mp = covidData.map(a => +a["Cases in the preceding 7 days"]);
                     scaleType = percentScale;
-                    min = d3.min(mp).toString();
-                    max = d3.max(mp).toString();
+                    min = d3.min(mp).toLocaleString();
+                    max = d3.max(mp).toLocaleString();
 
                     svg.selectAll("text").remove();
+                    svg.selectAll("rect").remove();
                     svg.append('text')
-                        .attr('x', 40)
-                        .attr('y', 165)
+                        .attr('x', 17)
+                        .attr('y', 120)
                         .attr("stroke", "black")
-                        .style("font-size", "12px")
+                        .style("font-size", "14px")
+                        .style("font-family", "poppins")
                         .text("COVID-19 Cases (Preceding Week)");
 
                     svg.append('text')
-                        .attr('x', 40)
-                        .attr('y', 210)
+                        .attr('x', 15)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(min);
 
                     svg.append('text')
-                        .attr('x', 195)
-                        .attr('y', 210)
+                        .attr('x', 200)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(max);
 
                     svg.append('rect')
-                        .attr('x', 40)
-                        .attr('y', 170)
+                        .attr('x', 20)
+                        .attr('y', 130)
                         .attr('width', 190)
-                        .attr('height', 25)
-                        .attr("stroke", "white")
+                        .attr('height', 20)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "0.01px")
                         .style("fill", "url(#linear-gradient)");
 
                 } else if (this.id === "weekChange") {
                     dt = weekChange;
                     mp = covidData.map(a => +a["Weekly Case % Change"]);
                     scaleType = percentScale;
-                    min = d3.min(mp).toString();
-                    max = d3.max(mp).toString();
+                    min = d3.min(mp).toLocaleString();
+                    max = d3.max(mp).toLocaleString();
 
                     svg.selectAll("text").remove();
+                    svg.selectAll("rect").remove();
                     svg.append('text')
-                        .attr('x', 40)
-                        .attr('y', 165)
+                        .attr('x', 2)
+                        .attr('y', 120)
                         .attr("stroke", "black")
-                        .style("font-size", "12px")
+                        .style("font-size", "14px")
+                        .style("font-family", "poppins")
                         .text("COVID-19 Cases (Weeky Case % Change)");
 
                     svg.append('text')
-                        .attr('x', 40)
-                        .attr('y', 210)
+                        .attr('x', 15)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(min + "%");
 
                     svg.append('text')
-                        .attr('x', 195)
-                        .attr('y', 210)
+                        .attr('x', 200)
+                        .attr('y', 170)
                         .attr("stroke", "black")
                         .style("font-size", "12px")
                         .text(max + "%");
 
                     svg.append('rect')
-                        .attr('x', 40)
-                        .attr('y', 170)
+                        .attr('x', 20)
+                        .attr('y', 130)
                         .attr('width', 190)
-                        .attr('height', 25)
-                        .attr("stroke", "white")
+                        .attr('height', 20)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "0.01px")
                         .style("fill", "url(#linear-gradient)");
 
                 } else if (this.id === "maxCases") {
                     dt = topCountries;
-                    mp = ((covidData.map(a => +a["Cases in the last 7 days/1M pop"])).sort(d3.descending)).splice(0,5); //trying this nested way
-                    //svg.selectAll("rect").remove();
-                    //svg.selectAll("text").remove();
-                    //svg.append('text')
-                        //.attr('x', 40)
-                        //.attr('y', 120)
-                        //.attr("stroke", "black")
-                        //.style("font-size", "12px")
-                        //.text("Countries with highest cases in last 7 days/1M population");
+                    mp = ((covidData.map(a => +a["Cases in the last 7 days/1M pop"])).sort(d3.descending)).splice(0,5); 
 
-                    //splice the data so that it only gets the top five from descending
-                    //mp = mp.sort(d3.descending);
-                    //mp = mp.splice(0, 5); //gets only the top five /1M pop
+                    svg.selectAll("rect").remove();
+                    svg.selectAll("text").remove();
+                    svg.append('text')
+                        .attr('x', 50)
+                        .attr('y', 85)
+                        .attr("stroke", "black")
+                        .style("font-size", "14px")
+                        .style("font-family", "poppins")
+                        .text("Countries with highest cases in last 7 days/1M population");
+                    
+                    svg.append('rect')
+                        .attr('x', 10)
+                        .attr('y', 70)
+                        .attr('width', 30)
+                        .attr('height', 20)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "0.01px")
+                        .style("fill", "#003396");
 
-                    scaleType = maxPerPopScale;
+                    scaleType = maxScale;
 
-                } else if (this.id === "toggleNorth") {
-                    dataSet = "north_america_covid_weekly_trend.csv"
+                } else if (this.id === "northAmerica") {
+                    svg.selectAll("text").remove();
+                    svg.selectAll("rect").remove();
+
+                    dataSet = "north_america_covid_weekly_trend.csv";
+
+                
                 }
-
+ 
                 //call once this used to be colorScale
                 scaleType.domain(d3.extent(mp)); //domain is the values for a given column
 

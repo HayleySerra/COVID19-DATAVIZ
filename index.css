@@ -1,5 +1,5 @@
 #northAmerica {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -15,7 +15,7 @@
   }
 
   #southAmerica {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -31,7 +31,7 @@
   }
 
   #thisWeek {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -47,7 +47,7 @@
   }
 
   #lastWeek {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -63,7 +63,7 @@
   }
 
   #weekChange {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -79,7 +79,7 @@
   }
 
   #maxCases {
-    background-color: #516bdf; /* Green */
+    background-color: #000000; /* Green */
     border: none;
     color: white;
     padding: 10px 20px;
